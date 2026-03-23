@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     }
 
     // Initialize the model
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
     // Format the conversation history, ensuring it starts with a user message
     const formattedMessages = messages.map((msg: any) => ({

@@ -814,7 +814,7 @@ export default function PyqChatPage() {
                       </button>
                     </div>
                <p className="text-xs text-gray-500 mt-1.5 ml-1">
-                 AI can make mistakes. Verify important information. Model: gpt-3.5-turbo.
+                 AI can make mistakes. Verify important information. Model: gpt-5-nano.
                </p>
             </form>
                               </div>

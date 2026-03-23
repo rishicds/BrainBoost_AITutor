@@ -62,7 +62,7 @@ async function initializeChatClients() {
     console.log("Initializing ChatOpenAI model for chat...");
     const chatModel = new ChatOpenAI({
       openAIApiKey: process.env.OPENAI_API_KEY!,
-      modelName: 'gpt-3.5-turbo',
+      modelName: 'gpt-5-nano',
       temperature: 0.1,
     });
     console.log("ChatOpenAI model initialized successfully for chat.");

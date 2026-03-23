@@ -53,7 +53,7 @@ export async function getGeminiResponse(prompt: string, tutorParams: TutorParams
   const tutorName = tutorMapping[tutorParams.subject.toLowerCase()] || "Chandrima"
 
   // Configure Gemini model
-  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" })
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" })
 
   // Customize prompt based on tutor parameters
   let personalityPrompt = ""
@@ -263,7 +263,7 @@ IMPORTANT: Format the paper with clear section headers (SECTION A, SECTION B, et
 `
 
   // Call to Gemini API with the detailed prompt
-  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" })
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" })
   const result = await model.generateContent(prompt)
   const response = await result.response
   const mockTestContent = response.text()

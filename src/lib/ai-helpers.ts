@@ -50,7 +50,7 @@ export async function getExperimentAnalysis(params: ExperimentParams) {
     `
 
     // Initialize the model
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" })
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" })
     
     // Call the Gemini API
     const result = await model.generateContent(prompt)

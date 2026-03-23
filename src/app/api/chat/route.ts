@@ -72,10 +72,13 @@ IMPORTANT INSTRUCTIONS:
 2. Never use asterisks, backticks, or other markdown symbols except for valid Mermaid code blocks.
 3. For equations, write them in plain text form.
 4. If the user asks for a flowchart or diagram, ALWAYS include a valid Mermaid code block (inside triple backticks with 'mermaid') at the END of your response. Do not describe the diagram in text if a Mermaid diagram is provided.
-5. Always end your response with a "Resources" section that suggests:
-   - A mock test at /practice
-   - Previous year questions at /pyq
-   - Relevant lab experiments at /lab
+5. Always end your response with a "Resources" section using this exact format (each item on a new line):
+
+Resources:
+- A mock test at /practice
+- Previous year questions at /pyq
+- Relevant lab experiments at /lab
+
 6. Keep explanations clear and conversational.`,
   chemistry: `You are a chemistry tutor. Only answer questions related to chemistry. If asked about other subjects, politely redirect to the relevant subject.
 IMPORTANT INSTRUCTIONS:
@@ -83,10 +86,13 @@ IMPORTANT INSTRUCTIONS:
 2. Never use asterisks, backticks, or other markdown symbols except for valid Mermaid code blocks.
 3. For equations, write them in plain text form.
 4. If the user asks for a flowchart or diagram, ALWAYS include a valid Mermaid code block (inside triple backticks with 'mermaid') at the END of your response. Do not describe the diagram in text if a Mermaid diagram is provided.
-5. Always end your response with a "Resources" section that suggests:
-   - A mock test at /practice
-   - Previous year questions at /pyq
-   - Relevant lab experiments at /lab
+5. Always end your response with a "Resources" section using this exact format (each item on a new line):
+
+Resources:
+- A mock test at /practice
+- Previous year questions at /pyq
+- Relevant lab experiments at /lab
+
 6. Keep explanations clear and conversational.`,
   mathematics: `You are a mathematics tutor. Only answer questions related to mathematics. If asked about other subjects, politely redirect to the relevant subject.
 IMPORTANT INSTRUCTIONS:
@@ -94,10 +100,13 @@ IMPORTANT INSTRUCTIONS:
 2. Never use asterisks, backticks, or other markdown symbols except for valid Mermaid code blocks.
 3. For equations, write them in plain text form.
 4. If the user asks for a flowchart or diagram, ALWAYS include a valid Mermaid code block (inside triple backticks with 'mermaid') at the END of your response. Do not describe the diagram in text if a Mermaid diagram is provided.
-5. Always end your response with a "Resources" section that suggests:
-   - A mock test at /practice
-   - Previous year questions at /pyq
-   - Practice problems at /lab
+5. Always end your response with a "Resources" section using this exact format (each item on a new line):
+
+Resources:
+- A mock test at /practice
+- Previous year questions at /pyq
+- Practice problems at /lab
+
 6. Keep explanations clear and conversational.`,
   biology: `You are a biology tutor. Only answer questions related to biology. If asked about other subjects, politely redirect to the relevant subject.
 IMPORTANT INSTRUCTIONS:
@@ -105,12 +114,39 @@ IMPORTANT INSTRUCTIONS:
 2. Never use asterisks, backticks, or other markdown symbols except for valid Mermaid code blocks.
 3. For equations, write them in plain text form.
 4. If the user asks for a flowchart or diagram, ALWAYS include a valid Mermaid code block (inside triple backticks with 'mermaid') at the END of your response. Do not describe the diagram in text if a Mermaid diagram is provided.
-5. Always end your response with a "Resources" section that suggests:
-   - A mock test at /practice
-   - Previous year questions at /pyq
-   - Relevant lab experiments at /lab
+5. Always end your response with a "Resources" section using this exact format (each item on a new line):
+
+Resources:
+- A mock test at /practice
+- Previous year questions at /pyq
+- Relevant lab experiments at /lab
+
 6. Keep explanations clear and conversational.`,
 };
+
+// Add function to format Resources section
+function formatResourcesSection(text: string) {
+  // Match "Resources:" followed by text and replace with properly formatted version
+  const resourcesMatch = text.match(/Resources:(.+?)(?=\n\n|$)/i);
+  if (resourcesMatch) {
+    // Extract the resources text
+    const resourcesText = resourcesMatch[1].trim();
+
+    // Clean up and reformat
+    let formatted = resourcesText
+      .replace(/\s*-\s*/g, '\n- ') // Ensure dashes are on new lines
+      .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+      .trim();
+
+    // Reconstruct with proper formatting
+    const cleanedText = text.replace(
+      /Resources:(.+?)(?=\n\n|$)/i,
+      'Resources:\n- A mock test at /practice\n- Previous year questions at /pyq\n- Relevant lab experiments at /lab'
+    );
+    return cleanedText;
+  }
+  return text;
+}
 
 // Add sentiment analysis function
 function analyzeSentiment(text: string) {
@@ -194,7 +230,7 @@ export async function POST(req: Request) {
       lastInteraction: serverTimestamp(),
     });
 
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const subjectPrompt =
       SUBJECT_PROMPTS[subject as keyof typeof SUBJECT_PROMPTS] ||
@@ -264,6 +300,9 @@ export async function POST(req: Request) {
       const sampleMermaid = `graph TD\n  A[Start] --> B{Is nucleus stable?}\n  B -- No --> C[Neutron Absorption]\n  C --> D[Nucleus Splits]\n  D --> E[Energy Released]\n  D --> F[More Fissionable Nuclei?]\n  F -- Yes --> C\n  F -- No --> G[End]`;
       visualization = { type: "mermaid", code: sampleMermaid };
     }
+
+    // Format Resources section properly
+    cleanText = formatResourcesSection(cleanText);
 
     return NextResponse.json({
       response: cleanText,
